@@ -52,8 +52,7 @@ jobs:
           conda activate constructor
           conda install conda-build
           conda build constructor
-          conda search -f constructor
-          conda install --use-local constructor
+          conda install -c file://${CONDA_PREFIX}/conda-bld/ constructor
           constructor --platform=${{ matrix.platform }} .
 
       - uses: m-kuhn/action-tmate@patch-1
