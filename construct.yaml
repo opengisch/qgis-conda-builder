@@ -1,0 +1,19 @@
+name: QGIS
+version: "__ver__"
+channels:
+  - "conda-forge"
+specs:
+  - qgis=__ver__
+  - python=3.11
+license_file: COPYING
+  # welcome_image: photo.png  # [win]
+installer_type: pkg
+pkg_name: QGIS-__shortver__.app
+default_location_pkg: /Applications
+reverse_domain_identifier: org.qgis.QGIS
+# notarization_identity_name: XXX
+mac_bundle:
+  name: QGIS-__shortver__
+  info_plist: extra/Info.plist
+  resources: extra/Resources
+  executable: bin/qgis
