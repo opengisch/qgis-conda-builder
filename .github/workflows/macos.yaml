@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - platform: 'osx-64'
-          - platform: 'osx-arm64'
+            #          - platform: 'osx-arm64'
 
     name: Package for macOS
     steps:
@@ -33,11 +33,6 @@ jobs:
           miniconda-version: "latest"
           activate-environment: "constructor"
 
-      - name: Enable constructor
-        run: |
-          conda install conda-build
-          conda develop ../constructor
-
       - name: 🌾 Get latest version
         shell: bash
         run: |
@@ -52,8 +47,16 @@ jobs:
       - name: 📦 Package
         shell: bash
         run: |
-          conda install constructor
-          constructor --platform=${{ matrix.platform }}
+          source /Users/runner/.profile
+          conda init bash
+          conda activate constructor
+          conda install conda-build
+          conda build constructor
+          conda install --use-local constructor
+          constructor --platform=${{ matrix.platform }} .
+
+      - uses: m-kuhn/action-tmate@patch-1
+        if: always()
 
       - name: 📦 Upload artifacts
         uses: actions/upload-artifact@v3
