@@ -52,6 +52,7 @@ jobs:
           conda activate constructor
           conda install conda-build
           conda build constructor
+          conda search -f constructor
           conda install --use-local constructor
           constructor --platform=${{ matrix.platform }} .
 
