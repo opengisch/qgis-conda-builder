@@ -20,10 +20,23 @@ jobs:
       - name: 🐣 Checkout
         uses: actions/checkout@v3
 
+      - name: 🐣 Checkout Constructor
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: opengisch/constructor
+          ref: qgis-bundling
+          path: constructor
+
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
           activate-environment: "constructor"
+
+      - name: Enable constructor
+        run: |
+          conda install conda-build
+          conda develop ../constructor
 
       - name: 🌾 Get latest version
         shell: bash
