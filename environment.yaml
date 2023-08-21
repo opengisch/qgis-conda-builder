@@ -1,0 +1,7 @@
+name: anaconda-client-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - conda-build
+  - conda-standalone

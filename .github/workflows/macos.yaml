@@ -32,6 +32,7 @@ jobs:
         with:
           miniconda-version: "latest"
           activate-environment: "constructor"
+          environment-file: "environment.yaml"
 
       - name: 🌾 Get latest version
         shell: bash
@@ -45,14 +46,14 @@ jobs:
           sed -i '' "s/__shortver__/$QGIS_VERSION_SHORT/g" construct.yaml
 
       - name: 📦 Package
-        shell: bash
+        shell: zsh
         run: |
-          source /Users/runner/.profile
-          conda init bash
-          conda activate constructor
-          conda install conda-build
+          # source /Users/runner/.profile
+          # conda init bash
+          # conda activate constructor
+          # conda install conda-build
           conda build constructor
-          conda install -c file://${CONDA_PREFIX}/conda-bld/ constructor
+          conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
           constructor --platform=${{ matrix.platform }} .
 
       - uses: m-kuhn/action-tmate@patch-1
