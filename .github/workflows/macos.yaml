@@ -48,10 +48,10 @@ jobs:
       - name: 📦 Package
         shell: pwsh
         run: |
-          curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ platform }}"' | cut -d : -f 2,3 | tr -d \" | wget -qi -
+          curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ matrix.platform }}"' | cut -d : -f 2,3 | tr -d \" | wget -qi -
           conda build constructor
           conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
-          constructor --platform=${{ matrix.platform }} --conda-exe=micromamba-${{ platform }} .
+          constructor --platform=${{ matrix.platform }} --conda-exe=micromamba-${{ matrix.platform }} .
 
       - name: 📦 Upload artifacts
         uses: actions/upload-artifact@v3
