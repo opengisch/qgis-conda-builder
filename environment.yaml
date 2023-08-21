@@ -5,3 +5,4 @@ channels:
 dependencies:
   - conda-build
   - conda-standalone
+  - pillow >=3.1
