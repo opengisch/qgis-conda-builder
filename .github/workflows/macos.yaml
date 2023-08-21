@@ -51,6 +51,7 @@ jobs:
           curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest
           curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ matrix.platform }}"' | cut -d : -f 2,3 | tr -d '"'
           curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ matrix.platform }}"' | cut -d : -f 2,3 | tr -d '"' | wget -qi -
+          wget https://github.com/mamba-org/micromamba-releases/releases/download/1.4.9-0/micromamba-${{ matrix.platform }}
           ls -al
           conda build constructor
           conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
