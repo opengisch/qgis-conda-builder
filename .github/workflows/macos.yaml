@@ -48,10 +48,6 @@ jobs:
       - name: 📦 Package
         shell: zsh
         run: |
-          # source /Users/runner/.profile
-          # conda init bash
-          # conda activate constructor
-          # conda install conda-build
           conda build constructor
           conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
           constructor --platform=${{ matrix.platform }} .
