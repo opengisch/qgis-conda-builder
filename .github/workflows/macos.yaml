@@ -53,10 +53,9 @@ jobs:
           conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
           constructor --platform=${{ matrix.platform }} --conda-exe=micromamba-${{ platform }} .
 
-      - uses: m-kuhn/action-tmate@patch-1
-        if: always()
-
       - name: 📦 Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           path: '*.pkg'
+          name: QGIS-${{ env.QGIS_VERSION }}
+
