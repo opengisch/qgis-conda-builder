@@ -1,0 +1,62 @@
+---
+name: 🍎 MacOS
+on:
+  push:
+    branches:
+      - main
+# TODO: probably create a nightly job
+
+jobs:
+  package:
+    runs-on: macos-13
+    strategy:
+      matrix:
+        include:
+          - platform: 'osx-64'
+            #          - platform: 'osx-arm64'
+
+    name: Package for macOS
+    steps:
+      - name: 🐣 Checkout
+        uses: actions/checkout@v3
+
+      - name: 🐣 Checkout Constructor
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          repository: opengisch/constructor
+          ref: qgis-bundling
+          path: constructor
+
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          miniconda-version: "latest"
+          activate-environment: "constructor"
+          environment-file: "environment.yaml"
+
+      - name: 🌾 Get latest version
+        shell: bash
+        run: |
+          QGIS_VERSION=$(conda search -c conda-forge -f qgis | grep py311 | tail -n 1 | tr -s ' ' | cut -f 2 -d ' ')
+          QGIS_VERSION_SHORT=$(echo $QGIS_VERSION | cut -d'.'  -f 1,2)
+          echo QGIS_VERSION=$QGIS_VERSION >> $GITHUB_ENV
+          echo QGIS_VERSION_SHORT=$QGIS_VERSION_SHORT >> $GITHUB_ENV
+
+          sed -i '' "s/__ver__/$QGIS_VERSION/g" construct.yaml
+          sed -i '' "s/__shortver__/$QGIS_VERSION_SHORT/g" construct.yaml
+
+      - name: 📦 Package
+        shell: pwsh
+        run: |
+          curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ platform }}"' | cut -d : -f 2,3 | tr -d \" | wget -qi -
+          conda build constructor
+          conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
+          constructor --platform=${{ matrix.platform }} .
+
+      - uses: m-kuhn/action-tmate@patch-1
+        if: always()
+
+      - name: 📦 Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: '*.pkg'

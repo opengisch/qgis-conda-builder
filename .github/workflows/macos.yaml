@@ -13,7 +13,7 @@ jobs:
       matrix:
         include:
           - platform: 'osx-64'
-            #          - platform: 'osx-arm64'
+          - platform: 'osx-arm64'
 
     name: Package for macOS
     steps:
@@ -48,9 +48,10 @@ jobs:
       - name: 📦 Package
         shell: pwsh
         run: |
+          curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ platform }}"' | cut -d : -f 2,3 | tr -d \" | wget -qi -
           conda build constructor
           conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
-          constructor --platform=${{ matrix.platform }} .
+          constructor --platform=${{ matrix.platform }} --conda-exe=micromamba-${{ platform }} .
 
       - uses: m-kuhn/action-tmate@patch-1
         if: always()
