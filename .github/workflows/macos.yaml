@@ -46,7 +46,7 @@ jobs:
           sed -i '' "s/__shortver__/$QGIS_VERSION_SHORT/g" construct.yaml
 
       - name: 📦 Package
-        shell: zsh
+        shell: pwsh
         run: |
           conda build constructor
           conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
