@@ -11,7 +11,46 @@ installer_type: pkg
 pkg_name: QGIS-__shortver__.app
 default_location_pkg: /Applications
 reverse_domain_identifier: org.qgis.QGIS
-# notarization_identity_name: XXX
+readme_text: |
+  Welcome to the QGIS __ver__ Installer!
+
+  QGIS is a powerful and user-friendly open-source Geographic Information System (GIS). Whether you're a cartographer, geographer, environmental scientist, or simply someone interested in spatial data, QGIS provides you with the tools to create, edit, analyze, and visualize geospatial information.
+
+  Before you proceed with the installation, please take a moment to review the following information:
+
+  1. **License Agreement:** By installing QGIS, you agree to abide by the terms of the GNU General Public License. This means that QGIS is free to use, modify, and distribute, fostering collaboration and community-driven development.
+
+  2. **Documentation and Support:** QGIS offers extensive documentation, tutorials, and a vibrant user community that can help you get started and address any questions you might have.
+
+  3. **Security:** The QGIS project takes security seriously. Be sure to download the installer from the official QGIS website to avoid potential security risks.
+
+  4. **Contributions:** QGIS thrives on contributions from users like you. If you have coding skills, cartographic expertise, or a passion for spatial data, consider getting involved in the development and enhancement of the software.
+
+  Thank you for choosing QGIS for your geospatial needs. Let's get started with the installation process. If you have any questions or encounter any issues, our community is here to help.
+
+  Click "Next" to begin the installation journey!
+conclusion_text: |
+  Congratulations, QGIS __ver__ is now successfully installed on your system!
+
+  You've taken the first step towards unlocking the power of spatial data analysis, cartography, and geographic information systems. QGIS empowers you to explore, visualize, and interpret data in ways that can lead to new insights and discoveries.
+
+  As you embark on your QGIS journey, here are a few things to keep in mind:
+
+  1. **Exploration:** Dive into the intuitive interface and start exploring the tools and functionalities QGIS offers. From simple map creation to advanced spatial analysis, the possibilities are endless.
+
+  2. **Learning:** Familiarize yourself with the documentation and tutorials available on the QGIS website. They will guide you through various features and help you make the most of the software's capabilities.
+
+  3. **Community:** Join the thriving QGIS community. Connect with fellow users, seek advice, share your work, and learn from others' experiences. The community's collaborative spirit is at the heart of QGIS's success.
+
+  4. **Plugins:** QGIS's extensibility is one of its strengths. Explore the plugin repository to find and install additional tools and features that align with your specific needs.
+
+  5. **Data Integration:** QGIS supports a wide range of data formats and sources. Import your own datasets or connect to external data sources to enrich your analyses.
+
+  6. **Feedback:** Your experience matters. If you encounter any issues, have suggestions for improvement, or want to contribute, don't hesitate to get in touch with the QGIS development team.
+
+  Remember, QGIS is a powerful tool that grows with your skills and aspirations. Whether you're creating maps for presentations, conducting complex spatial analysis, or working on environmental studies, QGIS is here to support you every step of the way.
+
+  Thank you for choosing QGIS. Now go ahead, start mapping, and let your geospatial journey unfold!
 mac_bundle:
   name: QGIS-__shortver__
   info_plist: extra/Info.plist
