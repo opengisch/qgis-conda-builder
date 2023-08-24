@@ -16,8 +16,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - platform: 'x86_64'
-          - platform: 'arm64'
+          - architecture: 'x86_64'
+            conda_platform: 'osx-64'
+          - architecture: 'arm64'
+            conda_platform: 'osx-arm64'
 
     name: Package for macOS
     steps:
@@ -43,7 +45,6 @@ jobs:
         run: |
           QGIS_VERSION=$(conda search -c conda-forge -f qgis | grep py311 | tail -n 1 | tr -s ' ' | cut -f 2 -d ' ')
           QGIS_VERSION_SHORT=$(echo $QGIS_VERSION | cut -d'.'  -f 1,2)
-          MICROMAMBA_PLATFORM="osx-"$(echo ${{ matrix.platform }} | cut -d_ -f2)
           echo QGIS_VERSION=$QGIS_VERSION >> $GITHUB_ENV
           echo QGIS_VERSION_SHORT=$QGIS_VERSION_SHORT >> $GITHUB_ENV
           echo MICROMAMBA_PLATFORM=$MICROMAMBA_PLATFORM >> $GITHUB_ENV
@@ -66,6 +67,6 @@ jobs:
       - name: 📦 Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.platform }}
-          path: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.platform }}.pkg
+          name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.architecture }}
+          path: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.architecture }}.pkg
 
