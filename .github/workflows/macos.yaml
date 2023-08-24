@@ -12,8 +12,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - platform: 'osx-64'
-          - platform: 'osx-arm64'
+          - platform: 'x86_64'
+          - platform: 'arm64'
 
     name: Package for macOS
     steps:
@@ -39,8 +39,10 @@ jobs:
         run: |
           QGIS_VERSION=$(conda search -c conda-forge -f qgis | grep py311 | tail -n 1 | tr -s ' ' | cut -f 2 -d ' ')
           QGIS_VERSION_SHORT=$(echo $QGIS_VERSION | cut -d'.'  -f 1,2)
+          MICROMAMBA_PLATFORM="osx-"$(echo ${{ matrix.platform }} | cut -d_ -f2)
           echo QGIS_VERSION=$QGIS_VERSION >> $GITHUB_ENV
           echo QGIS_VERSION_SHORT=$QGIS_VERSION_SHORT >> $GITHUB_ENV
+          echo MICROMAMBA_PLATFORM=$MICROMAMBA_PLATFORM >> $GITHUB_ENV
 
           sed -i '' "s/__ver__/$QGIS_VERSION/g" construct.yaml
           sed -i '' "s/__shortver__/$QGIS_VERSION_SHORT/g" construct.yaml
@@ -49,17 +51,16 @@ jobs:
         shell: pwsh
         run: |
           curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest
-          curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ matrix.platform }}"' | cut -d : -f 2,3 | tr -d '"'
-          curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ matrix.platform }}"' | cut -d : -f 2,3 | tr -d '"' | wget -qi -
-          wget https://github.com/mamba-org/micromamba-releases/releases/download/1.4.9-0/micromamba-${{ matrix.platform }}
+          curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ env.MICROMAMBA_PLATFORM }}"' | cut -d : -f 2,3 | tr -d '"'
+          curl -s https://api.github.com/repos/mamba-org/micromamba-releases/releases/latest | grep 'browser_download_url.*micromamba-${{ env.MICROMAMBA_PLATFORM }}"' | cut -d : -f 2,3 | tr -d '"' | wget -qi -
+          wget https://github.com/mamba-org/micromamba-releases/releases/download/1.4.9-0/micromamba-${{ env.MICROMAMBA_PLATFORM }}
           ls -al
           conda build constructor
           conda install /Users/runner/miniconda3/envs/constructor/conda-bld/osx-64/*.tar.bz2
-          constructor --platform=${{ matrix.platform }} --conda-exe=micromamba-${{ matrix.platform }} .
+          constructor --platform=${{ env.MICROMAMBA_PLATFORM }} --conda-exe=micromamba-${{ env.MICROMAMBA_PLATFORM }} .
 
       - name: 📦 Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          path: '*.pkg'
-          name: QGIS-${{ env.QGIS_VERSION }}
+          path: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.platform }}.pkg
 
