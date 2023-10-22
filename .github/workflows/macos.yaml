@@ -108,6 +108,7 @@ jobs:
           name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-arm64
       - uses: ncipollo/release-action@v1
         with:
-          name: $${{ env.QGIS_VERSION }}
+          name: ${{ env.QGIS_VERSION }}
           artifacts: "*.pkg"
           body: "body.md"
+          tag: ${{ env.QGIS_VERSION }}
