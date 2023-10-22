@@ -92,7 +92,9 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: package
+    needs:
+      - get-version
+      - package
     env:
       QGIS_VERSION: ${{ needs.get-version.outputs.QGIS_VERSION }}
       QGIS_VERSION_SHORT: ${{ needs.get-version.outputs.QGIS_VERSION_SHORT }}
