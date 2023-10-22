@@ -14,8 +14,8 @@ on:
 # TODO: probably create a nightly job
 
 jobs:
-  name: Get version
   get-version:
+    name: Get version
     runs-on: ubuntu-latest
     outputs:
       QGIS_VERSION: ${{ steps.get-version.outputs.QGIS_VERSION }}
@@ -91,7 +91,7 @@ jobs:
 
   release:
     name: Release
-    runs-on: macos-13
+    runs-on: ubuntu-latest
     env:
       QGIS_VERSION: ${{ needs.get-version.outputs.QGIS_VERSION }}
       QGIS_VERSION_SHORT: ${{ needs.get-version.outputs.QGIS_VERSION_SHORT }}
