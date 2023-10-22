@@ -14,8 +14,32 @@ on:
 # TODO: probably create a nightly job
 
 jobs:
+  name: Get version
+  get-version:
+    runs-on: ubuntu-latest
+    outputs:
+      QGIS_VERSION: ${{ steps.get-version.outputs.QGIS_VERSION }}
+      QGIS_VERSION_SHORT: ${{ steps.get-version.outputs.QGIS_VERSION_SHORT }}
+      MICROMAMBA_PLATFORM: ${{ steps.get-version.outputs.MICROMAMBA_PLATFORM }}
+    steps:
+      - name: 🌾 Get latest version
+        id: get-version
+        shell: bash
+        run: |
+          QGIS_VERSION=$(conda search -c conda-forge -f qgis | grep py311 | tail -n 1 | tr -s ' ' | cut -f 2 -d ' ')
+          QGIS_VERSION_SHORT=$(echo $QGIS_VERSION | cut -d'.'  -f 1,2)
+          echo QGIS_VERSION=$QGIS_VERSION >> $GITHUB_OUTPUT
+          echo QGIS_VERSION_SHORT=$QGIS_VERSION_SHORT >> $GITHUB_OUTPUT
+          echo MICROMAMBA_PLATFORM=$MICROMAMBA_PLATFORM >> $GITHUB_OUTPUT
+
   package:
+    name: Package for macOS
     runs-on: macos-13
+    needs: get-version
+    env:
+      QGIS_VERSION: ${{ needs.get-version.outputs.QGIS_VERSION }}
+      QGIS_VERSION_SHORT: ${{ needs.get-version.outputs.QGIS_VERSION_SHORT }}
+      MICROMAMBA_PLATFORM: ${{ needs.get-version.outputs.MICROMAMBA_PLATFORM }}
     strategy:
       matrix:
         include:
@@ -23,8 +47,6 @@ jobs:
             conda_platform: 'osx-64'
           - architecture: 'arm64'
             conda_platform: 'osx-arm64'
-
-    name: Package for macOS
     steps:
       - name: 🐣 Checkout
         uses: actions/checkout@v3
@@ -37,23 +59,17 @@ jobs:
           ref: qgis-bundling
           path: constructor
 
+      - name: Prepare
+        run: |
+          sed -i '' "s/__ver__/$QGIS_VERSION/g" construct.yaml
+          sed -i '' "s/__shortver__/$QGIS_VERSION_SHORT/g" construct.yaml
+
+
       - uses: conda-incubator/setup-miniconda@v2
         with:
           miniconda-version: "latest"
           activate-environment: "constructor"
           environment-file: "environment.yaml"
-
-      - name: 🌾 Get latest version
-        shell: bash
-        run: |
-          QGIS_VERSION=$(conda search -c conda-forge -f qgis | grep py311 | tail -n 1 | tr -s ' ' | cut -f 2 -d ' ')
-          QGIS_VERSION_SHORT=$(echo $QGIS_VERSION | cut -d'.'  -f 1,2)
-          echo QGIS_VERSION=$QGIS_VERSION >> $GITHUB_ENV
-          echo QGIS_VERSION_SHORT=$QGIS_VERSION_SHORT >> $GITHUB_ENV
-          echo MICROMAMBA_PLATFORM=$MICROMAMBA_PLATFORM >> $GITHUB_ENV
-
-          sed -i '' "s/__ver__/$QGIS_VERSION/g" construct.yaml
-          sed -i '' "s/__shortver__/$QGIS_VERSION_SHORT/g" construct.yaml
 
       - name: 📦 Package
         shell: pwsh
@@ -73,3 +89,22 @@ jobs:
           name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.architecture }}
           path: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.architecture }}.pkg
 
+  release:
+    name: Release
+    runs-on: macos-13
+    env:
+      QGIS_VERSION: ${{ needs.get-version.outputs.QGIS_VERSION }}
+      QGIS_VERSION_SHORT: ${{ needs.get-version.outputs.QGIS_VERSION_SHORT }}
+      MICROMAMBA_PLATFORM: ${{ needs.get-version.outputs.MICROMAMBA_PLATFORM }}
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-x86_64
+      - uses: actions/download-artifact@v3
+        with:
+          name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-arm64
+      - uses: ncipollo/release-action@v1
+        with:
+          name: $${{ env.QGIS_VERSION }}
+          artifacts: "*.pkg"
+          body: "body.md"
