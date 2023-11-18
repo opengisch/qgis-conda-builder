@@ -5,6 +5,7 @@ channels:
 specs:
   - qgis=__ver__
   - python=3.11
+  - libgdal-arrow-parquet
 license_file: COPYING
   # welcome_image: photo.png  # [win]
 installer_type: pkg
