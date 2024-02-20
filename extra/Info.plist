@@ -305,13 +305,13 @@
 		<string>zh_TW</string>
 	</array>
 	<key>CFBundleName</key>
-	<string>QGIS-LTR</string>
+	<string>QGIS</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>3.22.7</string>
 	<key>CFBundleSignature</key>
-	<string>QGIS-LTR</string>
+	<string>QGIS</string>
 	<key>CFBundleVersion</key>
 	<string>3.22.7 ()</string>
 	<key>CSResourcesFileMapped</key>
