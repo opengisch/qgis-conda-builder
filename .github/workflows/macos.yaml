@@ -49,10 +49,10 @@ jobs:
             conda_platform: 'osx-arm64'
     steps:
       - name: 🐣 Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🐣 Checkout Constructor
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           repository: opengisch/constructor
@@ -84,7 +84,7 @@ jobs:
           constructor --platform=${{ matrix.conda_platform }} --conda-exe=micromamba-${{ matrix.conda_platform }} .
 
       - name: 📦 Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.architecture }}
           path: QGIS-${{ env.QGIS_VERSION }}-MacOSX-${{ matrix.architecture }}.pkg
@@ -100,10 +100,10 @@ jobs:
       QGIS_VERSION_SHORT: ${{ needs.get-version.outputs.QGIS_VERSION_SHORT }}
       MICROMAMBA_PLATFORM: ${{ needs.get-version.outputs.MICROMAMBA_PLATFORM }}
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-x86_64
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: QGIS-${{ env.QGIS_VERSION }}-MacOSX-arm64
       - uses: ncipollo/release-action@v1
